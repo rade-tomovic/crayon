@@ -2,5 +2,5 @@
 
 public interface ICurrencyConverter
 {
-    CurrencyConversionTimeRangeResult GetConversionForTimeSeries(CurrencyConversionTimeRangeInputModel model);
+    Task<CurrencyConversionTimeRangeResult> GetCurrencyIndicatorsForSetOfDates(CurrencyConversionTimeRangeInputModel model);
 }

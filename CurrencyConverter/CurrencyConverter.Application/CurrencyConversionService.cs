@@ -4,7 +4,7 @@ namespace CurrencyConverter.Application;
 
 public class CurrencyConversionService : ICurrencyConverter
 {
-    public CurrencyConversionTimeRangeResult GetConversionForTimeSeries(CurrencyConversionTimeRangeInputModel model)
+    public async Task<CurrencyConversionTimeRangeResult> GetCurrencyIndicatorsForSetOfDates(CurrencyConversionTimeRangeInputModel model)
     {
         throw new NotImplementedException();
     }
