@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CurrencyConverter.API.Middleware;
@@ -34,60 +35,32 @@ public class GlobalExceptionHandler
     {
         switch (_exception)
         {
-            case ArgumentNullException _:
-            case ArgumentException _:
+            case ValidationException validationException:
+            {
+                const int statusCode = (int)HttpStatusCode.BadRequest;
+                _context.Response.StatusCode = statusCode;
+
+                return new ProblemDetails
                 {
-                    const int statusCode = (int)HttpStatusCode.BadRequest;
-                    _context.Response.StatusCode = statusCode;
-
-                    return new ProblemDetails
-                    {
-                        Title = "Invalid argument",
-                        Status = statusCode,
-                        Detail = _exception.Message,
-                        Type = _exception.GetType().ToString()
-                    };
-                }
-            case HttpRequestException _:
-                {
-                    const int statusCode = (int)HttpStatusCode.BadRequest;
-                    _context.Response.StatusCode = statusCode;
-
-                    return new ProblemDetails
-                    {
-                        Title = "Invalid HTTP request",
-                        Status = statusCode,
-                        Detail = _exception.Message,
-                        Type = _exception.GetType().ToString()
-                    };
-                }
-            case UnauthorizedAccessException _:
-                {
-                    const int statusCode = (int)HttpStatusCode.Unauthorized;
-                    _context.Response.StatusCode = statusCode;
-
-                    return new ProblemDetails
-                    {
-                        Title = "Invalid user identity",
-                        Status = statusCode,
-                        Detail = _exception.Message,
-                        Type = _exception.GetType().ToString()
-                    };
-                }
-
+                    Title = "Invalid input",
+                    Status = statusCode,
+                    Detail = validationException.Errors.ToString(),
+                    Type = _exception.GetType().ToString()
+                };
+            }
             default:
-                {
-                    const int statusCode = (int)HttpStatusCode.InternalServerError;
-                    _context.Response.StatusCode = statusCode;
+            {
+                const int statusCode = (int)HttpStatusCode.InternalServerError;
+                _context.Response.StatusCode = statusCode;
 
-                    return new ProblemDetails
-                    {
-                        Title = "Something went wrong",
-                        Status = statusCode,
-                        Detail = _exception.InnerException?.Message ?? _exception.Message,
-                        Type = _exception.GetType().ToString()
-                    };
-                }
+                return new ProblemDetails
+                {
+                    Title = "Something went wrong",
+                    Status = statusCode,
+                    Detail = _exception.InnerException?.Message ?? _exception.Message,
+                    Type = _exception.GetType().ToString()
+                };
+            }
         }
     }
 }

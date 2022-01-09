@@ -8,6 +8,8 @@ public static class ApplicationServicesExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<ICurrencyConverter, CurrencyConversionService>();
+        services.AddScoped<CurrencyConversionRequestGenerator>();
+        
         return services;
     }
 }
