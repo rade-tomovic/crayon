@@ -16,3 +16,4 @@ Open solution inside VS 2022, set API project as startup project and run. It wil
   - Single task if only one date is provided
   - `Task.WhenAll` with up to N (i.e. N=10)
   - Split into batch processing of N tasks and run the second case (i.e. 60 dates = 6 batch x 10 tasks)
+- Response caching, either built-in or distributed Redis-like

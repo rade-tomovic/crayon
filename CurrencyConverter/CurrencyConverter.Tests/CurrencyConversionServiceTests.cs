@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture;
 using CurrencyConverter.Application;
 using CurrencyConverter.Application.Interfaces;
 using CurrencyConverter.Application.Models;
@@ -44,6 +46,25 @@ public class CurrencyConversionServiceTests
                 new(2018, 3, 1)
             }
         };
+
+        ICurrencyConversionTimeRangeResult result = await currencyConversionService.GetCurrencyIndicatorsForSetOfDates(modelForTest);
+
+        result.Should().BeAssignableTo<CurrencyConversionTimeRangeResult>();
+    }
+
+    [Fact]
+    public async Task CurrencyConversionService_ForProvidedActualDataLargeSet_ShouldCalculateIndicatorsCorrectly()
+    {
+        var currencyConversionRequestGenerator = new CurrencyConversionRequestGenerator(_logger, _configuration);
+        var currencyConversionService = new CurrencyConversionService(currencyConversionRequestGenerator);
+        var fixture = new Fixture();
+        fixture.Customizations.Add(new RandomDateTimeSequenceGenerator(new DateTime(2015,1,1), new DateTime(2022,1,1)));
+        var modelForTest = new CurrencyConversionTimeRangeInputModel
+        {
+            BaseCurrency = "SEK",
+            TargetCurrency = "NOK",
+            DateSet = fixture.CreateMany<DateTime>(100).ToList()
+    };
 
         ICurrencyConversionTimeRangeResult result = await currencyConversionService.GetCurrencyIndicatorsForSetOfDates(modelForTest);
 

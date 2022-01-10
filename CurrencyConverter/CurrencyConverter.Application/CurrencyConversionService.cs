@@ -35,7 +35,7 @@ public class CurrencyConversionService : ICurrencyConverter
 
     private static void PrepareInputData(CurrencyConversionTimeRangeInputModel model)
     {
-        model.DateSet = model.DateSet.ToHashSet().ToList();
+        model.DateSet = model.DateSet.ToHashSet(new DateComparer()).ToList();
         model.BaseCurrency = model.BaseCurrency.ToUpper();
         model.TargetCurrency = model.TargetCurrency.ToUpper();
     }
